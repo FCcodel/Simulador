@@ -6,11 +6,15 @@ let amplitudE = 1,
     frecuenciaE = 1,
     amplitudB = 1,
     frecuenciaB = 1,
-    showPlanes = true;
+    showE = true,
+    showB = true,
+    animRunning = false,
+    interval;
 
+// Generación de datos
 const x = d3.range(0, 4 * Math.PI, (4 * Math.PI) / 1000);
-const yE = x.map(d => amplitudE * Math.sin(frecuenciaE * d));
-const zB = x.map(d => amplitudB * Math.sin(frecuenciaB * d));
+let yE = x.map(d => amplitudE * Math.sin(frecuenciaE * d));
+let zB = x.map(d => amplitudB * Math.sin(frecuenciaB * d));
 
 const yScale = d3.scaleLinear().domain([-2, 2]).range([height, 0]);
 const xScale = d3.scaleLinear().domain([0, 4 * Math.PI]).range([0, width]);
@@ -23,59 +27,86 @@ const lineB = d3.line()
                 .x((d, i) => xScale(x[i]))
                 .y(d => yScale(d));
 
-svg.append("path")
-   .datum(yE)
-   .attr("class", "lineE")
-   .attr("d", lineE)
-   .style("stroke", "blue");
+const pathE = svg.append("path")
+                 .datum(yE)
+                 .attr("class", "lineE")
+                 .attr("d", lineE)
+                 .style("stroke", "blue");
 
-svg.append("path")
-   .datum(zB)
-   .attr("class", "lineB")
-   .attr("d", lineB)
-   .style("stroke", "red");
+const pathB = svg.append("path")
+                 .datum(zB)
+                 .attr("class", "lineB")
+                 .attr("d", lineB)
+                 .style("stroke", "red");
 
 function updateWave() {
-    const yE = x.map(d => amplitudE * Math.sin(frecuenciaE * d));
-    const zB = x.map(d => amplitudB * Math.sin(frecuenciaB * d));
+    yE = x.map(d => amplitudE * Math.sin(frecuenciaE * d));
+    zB = x.map(d => amplitudB * Math.sin(frecuenciaB * d));
     
-    svg.select(".lineE")
-       .datum(yE)
-       .attr("d", lineE);
-       
-    svg.select(".lineB")
-       .datum(zB)
-       .attr("d", lineB);
+    pathE.datum(yE).attr("d", lineE);
+    pathB.datum(zB).attr("d", lineB);
+
+    d3.select("#a-value").text(amplitudE);
+    d3.select("#w-value").text(frecuenciaE);
+    d3.select("#p-value").text(amplitudB);
+    d3.select("#m-value").text(frecuenciaB);
 }
 
-document.getElementById("amplitudE").addEventListener("input", function() {
+d3.select("#a-slider").on("input", function() {
     amplitudE = +this.value;
     updateWave();
 });
 
-document.getElementById("frecuenciaE").addEventListener("input", function() {
+d3.select("#w-slider").on("input", function() {
     frecuenciaE = +this.value;
     updateWave();
 });
 
-document.getElementById("amplitudB").addEventListener("input", function() {
+d3.select("#p-slider").on("input", function() {
     amplitudB = +this.value;
     updateWave();
 });
 
-document.getElementById("frecuenciaB").addEventListener("input", function() {
+d3.select("#m-slider").on("input", function() {
     frecuenciaB = +this.value;
     updateWave();
 });
 
-document.getElementById("togglePlanes").addEventListener("click", function() {
-    showPlanes = !showPlanes;
-    if (showPlanes) {
-        svg.select(".lineE").style("stroke-dasharray", "none");
-        svg.select(".lineB").style("stroke-dasharray", "none");
+d3.select("#toggleE").on("change", function() {
+    showE = this.checked;
+    pathE.style("display", showE ? null : "none");
+});
+
+d3.select("#toggleB").on("change", function() {
+    showB = this.checked;
+    pathB.style("display", showB ? null : "none");
+});
+
+function animate() {
+    let i = 0;
+    interval = setInterval(() => {
+        yE = x.map(d => amplitudE * Math.sin(frecuenciaE * d + i / 10.0));
+        zB = x.map(d => amplitudB * Math.sin(frecuenciaB * d + i / 10.0));
+        
+        pathE.datum(yE).attr("d", lineE);
+        pathB.datum(zB).attr("d", lineB);
+        i++;
+    }, 100);
+}
+
+function stopAnimation() {
+    clearInterval(interval);
+}
+
+d3.select("#play-pause").on("click", function() {
+    animRunning = !animRunning;
+    if (animRunning) {
+        animate();
+        d3.select(this).text("Pause");
     } else {
-        svg.select(".lineE").style("stroke-dasharray", "4,4");
-        svg.select(".lineB").style("stroke-dasharray", "4,4");
+        stopAnimation();
+        d3.select(this).text("Play");
     }
 });
 
+updateWave();

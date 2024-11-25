@@ -19,6 +19,15 @@ body {
     margin-top: 20px;
 }
 
+.sliders, .buttons, .checkboxes {
+    margin-bottom: 10px;
+}
+
 label {
     margin-right: 10px;
+}
+
+input[type="range"] {
+    margin-bottom: 10px;
+    display: block;
 }
