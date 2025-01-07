@@ -15,19 +15,8 @@ body {
     align-items: center;
 }
 
-.controls {
-    margin-top: 20px;
-}
-
-.sliders, .buttons, .checkboxes {
-    margin-bottom: 10px;
-}
-
-label {
-    margin-right: 10px;
-}
-
-input[type="range"] {
-    margin-bottom: 10px;
-    display: block;
+#wave-chart {
+    width: 800px;
+    height: 400px;
+    background-color: #ffffff; /* Fondo blanco */
 }
