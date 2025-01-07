@@ -35,11 +35,11 @@ let lineB = new THREE.Line(new THREE.BufferGeometry().setFromPoints(generateWave
 scene.add(lineE);
 scene.add(lineB);
 
-// Añadir ejes de referencia
+//ejes de referencia
 const axesHelper = new THREE.AxesHelper(5);
 scene.add(axesHelper);
 
-// Añadir etiquetas a las ondas
+// etiquetas a las ondas
 const spriteE = createTextSprite('Campo Eléctrico (E)', { color: 'blue' });
 spriteE.position.set(5, 1, 0);
 scene.add(spriteE);

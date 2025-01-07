@@ -63,16 +63,16 @@ ax.text(0, 0, 2, 'Z', color='black', fontsize=12, ha='left')
 
 # Añadir vectores sobre las ondas y etiquetas B y E 
 # Vector sobre la onda roja (Campo Magnético B) 
-ax.quiver(2 * np.pi, 0, amplitud_B, 1, 0, 0, color='red', pivot='tail', length=1, normalize=True) 
 ax.text(2 * np.pi, 0, amplitud_B, 'B', color='red', fontsize=12, ha='left') 
+ax.quiver(2 * np.pi, 0, amplitud_B, 1, 0, 0, color='red', pivot='tail', length=1, normalize=True)
 
 # Vector sobre la onda azul (Campo Eléctrico E) 
-ax.quiver(2 * np.pi, amplitud_E, -2, 1, 0, 0, color='blue', pivot='tail', length=1, normalize=True) 
 ax.text(2 * np.pi, amplitud_E, -2, 'E', color='blue', fontsize=12, ha='left')
+ax.quiver(2 * np.pi, amplitud_E, -2, 1, 0, 0, color='blue', pivot='tail', length=1, normalize=True) 
 
 # Añadir un vector que indique la dirección de propagación  (inicio_x, inicio_y, inicio_z, dir_x, dir_y, dir_z)
 ax.quiver(4 * np.pi, 0.5, 2 , 1, 0, 0, color='green', pivot='tail', length=1, normalize=True)
-ax.text(4 * np.pi + 1, 0, 2, 'V', color='green', fontsize=12, ha='right')
+ax.text(4 * np.pi + 1, 0, 2, 'c', color='green', fontsize=12, ha='right')
 
 # Añadir leyenda
 ax.legend()
