@@ -36,7 +36,7 @@ class CalculadoraTermodinamica:
 
     def calcularLongitudFinal(self, longitudInicial, tempInicial, tempFinal, material):
         """
-        Longitud final = alfa * LongitudInicial * (TemperaturaFinal - TemperaturaInicial)
+        Longitud final = alfa * LongitudInicial * (TemperaturaFinal - TemperaturaInicial) + longitudInicial
         """
         alfa_dict = {
             "Aluminio": 24e-6,
@@ -70,7 +70,7 @@ class CalculadoraTermodinamica:
         beta = beta_dict.get(material, 1.12e-4)  # Valor por defecto es el del Alcohol Etílico
         deltaT = tempFinal - tempInicial
         volumenFinal = beta * volumenInicial * deltaT + volumenInicial
-        return f"{volumenFinal:,} m³"  # Formatear el resultado con miles
+        return f"{volumenFinal:,} cm³"  # Formatear el resultado con miles
 
     def calcularTrabajoIsobarico(self, presion, volumenInicial, volumenFinal):
         """
@@ -185,7 +185,7 @@ def update_labels(event):
         entry7['values'] = ["Aluminio", "Latón y bronce", "Cobre", "Vidrio", "Plomo", "Acero", "Concreto"]
 
     elif opcionElegida == "Volumen Final en Expansión Volumétrica en Liquidos y Gases":
-        label1.config(text="Volumen Inicial (m³):")
+        label1.config(text="Volumen Inicial (cm³):")
         label2.config(text="Temperatura Inicial (°C):")
         label3.config(text="Temperatura Final (°C):")
         label4.grid_remove()
