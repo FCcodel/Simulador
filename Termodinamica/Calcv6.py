@@ -71,6 +71,13 @@ class CalculadoraTermodinamica:
         volumenFinal = beta * volumenInicial * deltaT + volumenInicial
         return f"{volumenFinal:,} m³"  # Formatear el resultado con miles
 
+    def calcularTrabajoIsobarico(self, presion, volumenInicial, volumenFinal):
+        """
+        W = -P * (Vf - Vi)
+        """
+        resultado = -presion * (volumenFinal - volumenInicial)
+        return f"{resultado} J"
+    
 # Function to update labels based on selected option
 def update_labels(event):
     opcionElegida = OpcionesCalculadora.get()
@@ -113,7 +120,7 @@ def update_labels(event):
         label5.grid_remove()
         entry5.grid_remove()
 
-    elif opcionElegida == "Expansión Térmica en Solidos":
+    elif opcionElegida == "Longitud Final en Expansión Térmica en Solidos":
         label1.config(text="Longitud Inicial (m):")
         label2.config(text="Temperatura Inicial (°C):")
         label3.config(text="Temperatura Final (°C):")
@@ -125,7 +132,7 @@ def update_labels(event):
         entry5.config(state='readonly')
         entry5['values'] = ["Aluminio", "Latón y bronce", "Cobre", "Vidrio", "Plomo", "Acero", "Concreto"]
 
-    elif opcionElegida == "Expansión Volumétrica en Liquidos y Gases":
+    elif opcionElegida == "Volumen Final en Expansión Volumétrica en Liquidos y Gases":
         label1.config(text="Volumen Inicial (m³):")
         label2.config(text="Temperatura Inicial (°C):")
         label3.config(text="Temperatura Final (°C):")
@@ -136,6 +143,15 @@ def update_labels(event):
         entry5.grid()
         entry5.config(state='readonly')
         entry5['values'] = ["Alcohol Etílico", "Benceno", "Acetona", "Glicerina", "Mercurio", "Trementina", "Gasolina", "Aire a 0°C", "Helio"]
+
+    elif opcionElegida == "Trabajo Consumido en Proceso Isobárico":
+        label1.config(text="Presión (Pa):")
+        label2.config(text="Volumen Inicial (m³):")
+        label3.config(text="Volumen Final (m³):")
+        label4.grid_remove()
+        entry4.grid_remove()
+        label5.grid_remove()
+        entry5.grid_remove()
 
     else:
         label1.config(text="Valor 1:")
@@ -178,19 +194,25 @@ def Calcular():
             calorEsp = float(entry3.get())
             result = calculadora.calcularCambioTemperatura(calor, masa, calorEsp)
         
-        elif option == "Expansión Térmica en Solidos":
+        elif option == "Longitud Final en Expansión Térmica en Solidos":
             longitudInicial = float(entry1.get())
             tempInicial = float(entry2.get())
             tempFinal = float(entry3.get())
             material = entry5.get()
             result = calculadora.calcularLongitudFinal(longitudInicial, tempInicial, tempFinal, material)
         
-        elif option == "Expansión Volumétrica en Liquidos y Gases":
+        elif option == "Volumen Final en Expansión Volumétrica en Liquidos y Gases":
             volumenInicial = float(entry1.get())
             tempInicial = float(entry2.get())
             tempFinal = float(entry3.get())
             material = entry5.get()
             result = calculadora.calcularVolumenFinal(volumenInicial, tempInicial, tempFinal, material)
+
+        elif option == "Trabajo Consumido en Proceso Isobárico":
+            Presion = float(entry1.get())
+            volumenInicial = float(entry2.get())
+            volumenFinal = float(entry3.get())
+            result = calculadora.calcularTrabajoIsobarico(Presion, volumenInicial, volumenFinal)
         
         Resultado.config(text=f"Resultado: {result}")
     
@@ -208,7 +230,7 @@ root.title("Calculadora Calorimetría")
 root.geometry("380x380")
 
 # creo que las opciones y dropdown
-OpcionesCalculadora = ttk.Combobox(root, values=["Calcular Calor", "Calcular Masa", "Calcular Calor Especifico", "Calcular Cambio de Temperatura", "Expansión Térmica en Solidos","Expansión Volumétrica en Liquidos y Gases"], width=40)
+OpcionesCalculadora = ttk.Combobox(root, values=["Calcular Calor", "Calcular Masa", "Calcular Calor Especifico", "Calcular Cambio de Temperatura", "Longitud Final en Expansión Térmica en Solidos","Volumen Final en Expansión Volumétrica en Liquidos y Gases","Trabajo Consumido en Proceso Isobárico"], width=52)
 OpcionesCalculadora.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
 OpcionesCalculadora.set("Seleccione una opción")
 OpcionesCalculadora.bind("<<ComboboxSelected>>", update_labels)
