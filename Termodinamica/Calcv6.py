@@ -78,6 +78,45 @@ class CalculadoraTermodinamica:
         """
         resultado = -presion * (volumenFinal - volumenInicial)
         return f"{resultado} J"
+    
+    def calcularTrabajoIsotermicoGases(self, masa, Temperatura, volumenInicial=None, volumenFinal=None, LongitudInicial=None, LongitudFinal=None, gasIdeal="Hidrógeno"):
+        """
+        W = n*R*T*ln(VolumenInicial/VolumenFinal)
+        Masa Molar = g/mol
+        n= masa(g)/Masa molar(g/mol) --> moles.
+        R: Constante universal de los gases ideales 8.314 J/(mol·K))
+        """
+        masaMolar_dict = {
+            "Hidrógeno": 2,
+            "Helio": 4,
+            "Nitrógeno": 28,
+            "Oxígeno": 32,
+            "Neón": 20,
+            "Argón": 40,
+            "Dióxido de carbono": 44,
+            "Metano": 16
+        }
+        
+        # Calcular el número de moles
+        masaMolar = masaMolar_dict.get(gasIdeal, 2)  # Valor por defecto es el del Hidrógeno
+        n = masa / masaMolar
+        
+        # Constante universal de los gases ideales
+        R = 8.314
+        
+        # Calcular el trabajo
+        if volumenInicial is not None and volumenFinal is not None:
+            deltaV = volumenFinal / volumenInicial
+            Trabajo = n * R * Temperatura * math.log(deltaV)
+        elif LongitudInicial is not None and LongitudFinal is not None:
+            deltaL = LongitudFinal / LongitudInicial
+            Trabajo = n * R * Temperatura * math.log(deltaL)
+        else:
+            raise ValueError("Debe proporcionar Volumen Inicial y Final o Longitud Inicial y Final.")
+        
+        return f"{Trabajo:,} J"  # Formatear el resultado con miles
+
+
 
 # Function to update labels based on selected option
 def update_labels(event):
@@ -91,6 +130,8 @@ def update_labels(event):
         entry4.grid()
         label5.grid_remove()
         entry5.grid_remove()
+        label6.grid_remove()
+        entry6.grid_remove()
 
     elif opcionElegida == "Calcular Masa":
         label1.config(text="Calor (J):")
@@ -101,6 +142,8 @@ def update_labels(event):
         entry4.grid()
         label5.grid_remove()
         entry5.grid_remove()
+        label6.grid_remove()
+        entry6.grid_remove()
 
     elif opcionElegida == "Calcular Calor Especifico":
         label1.config(text="Calor (J):")
@@ -111,6 +154,8 @@ def update_labels(event):
         entry4.grid()
         label5.grid_remove()
         entry5.grid_remove()
+        label6.grid_remove()
+        entry6.grid_remove()
 
     elif opcionElegida == "Calcular Cambio de Temperatura":
         label1.config(text="Calor (J):")
@@ -120,6 +165,8 @@ def update_labels(event):
         entry4.grid_remove()
         label5.grid_remove()
         entry5.grid_remove()
+        label6.grid_remove()
+        entry6.grid_remove()
 
     elif opcionElegida == "Longitud Final en Expansión Térmica en Solidos":
         label1.config(text="Longitud Inicial (m):")
@@ -127,11 +174,15 @@ def update_labels(event):
         label3.config(text="Temperatura Final (°C):")
         label4.grid_remove()
         entry4.grid_remove()
-        label5.config(text="Material:")
-        label5.grid()
-        entry5.grid()
-        entry5.config(state='readonly')
-        entry5['values'] = ["Aluminio", "Latón y bronce", "Cobre", "Vidrio", "Plomo", "Acero", "Concreto"]
+        label5.grid_remove()
+        entry5.grid_remove()
+        label6.grid_remove()
+        entry6.grid_remove()
+        label7.config(text="Material:")
+        label7.grid()
+        entry7.grid()
+        entry7.config(state='readonly')
+        entry7['values'] = ["Aluminio", "Latón y bronce", "Cobre", "Vidrio", "Plomo", "Acero", "Concreto"]
 
     elif opcionElegida == "Volumen Final en Expansión Volumétrica en Liquidos y Gases":
         label1.config(text="Volumen Inicial (m³):")
@@ -139,11 +190,15 @@ def update_labels(event):
         label3.config(text="Temperatura Final (°C):")
         label4.grid_remove()
         entry4.grid_remove()
-        label5.config(text="Material:")
-        label5.grid()
-        entry5.grid()
-        entry5.config(state='readonly')
-        entry5['values'] = ["Alcohol Etílico", "Benceno", "Acetona", "Glicerina", "Mercurio", "Trementina", "Gasolina", "Aire a 0°C", "Helio"]
+        label5.grid_remove()
+        entry5.grid_remove()
+        label6.grid_remove()
+        entry6.grid_remove()
+        label7.config(text="Material:")
+        label7.grid()
+        entry7.grid()
+        entry7.config(state='readonly')
+        entry7['values'] = ["Alcohol Etílico", "Benceno", "Acetona", "Glicerina", "Mercurio", "Trementina", "Gasolina", "Aire a 0°C", "Helio"]
 
     elif opcionElegida == "Trabajo Consumido en Proceso Isobárico":
         label1.config(text="Presión (Pa):")
@@ -153,6 +208,23 @@ def update_labels(event):
         entry4.grid_remove()
         label5.grid_remove()
         entry5.grid_remove()
+        label6.grid_remove()
+        entry6.grid_remove()    
+        label7.grid_remove()
+        entry7.grid_remove()
+
+    elif opcionElegida == "Trabajo consumido en proceso de expansión isotérmica de un gas ideal":
+        label1.config(text="Masa(m):")
+        label2.config(text="Temperatura(°K):")
+        label3.config(text="Volumen Inicial (m³):")
+        label4.config(text="Volumen Final (m³):")
+        label5.config(text="Longitud Incial (m):")
+        label6.config(text="Longitud Final (m):")
+        label8.config(text="Gas Ideal:")
+        label8.grid()
+        entry8.grid()
+        entry8.config(state='readonly')
+        entry8['values'] = ["Hidrógeno", "Helio", "Nitrógeno", "Oxígeno", "Neón", "Argón", "Dióxido de Carbono", "Metano"]
 
     else:
         label1.config(text="Valor 1:")
@@ -214,6 +286,16 @@ def Calcular():
             volumenInicial = float(entry2.get())
             volumenFinal = float(entry3.get())
             result = calculadora.calcularTrabajoIsobarico(Presion, volumenInicial, volumenFinal)
+
+        elif option == "Trabajo consumido en proceso de expansión isotérmica de un gas ideal":
+            masa = float(entry1.get())
+            Temperatura = float(entry2.get())
+            volumenInicial = float(entry3.get())
+            volumenFinal = float(entry4.get())
+            longitudInicial = float(entry5.get())
+            longitudFinal = float(entry6.get())
+            gasIdeal = entry8.get()
+            result = calculadora.calcularTrabajoIsotermicoGases(masa,Temperatura, volumenInicial, volumenFinal,longitudInicial,longitudFinal,gasIdeal)
         
         Resultado.config(text=f"Resultado: {result}")
     
@@ -231,7 +313,7 @@ root.title("Calculadora Calorimetría")
 root.geometry("380x380")
 
 # creo que las opciones y dropdown
-OpcionesCalculadora = ttk.Combobox(root, values=["Calcular Calor", "Calcular Masa", "Calcular Calor Especifico", "Calcular Cambio de Temperatura", "Longitud Final en Expansión Térmica en Solidos","Volumen Final en Expansión Volumétrica en Liquidos y Gases","Trabajo Consumido en Proceso Isobárico"], width=52)
+OpcionesCalculadora = ttk.Combobox(root, values=["Calcular Calor", "Calcular Masa", "Calcular Calor Especifico", "Calcular Cambio de Temperatura", "Longitud Final en Expansión Térmica en Solidos","Volumen Final en Expansión Volumétrica en Liquidos y Gases","Trabajo Consumido en Proceso Isobárico","Trabajo consumido en proceso de expansión isotérmica de un gas ideal"], width=52)
 OpcionesCalculadora.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
 OpcionesCalculadora.set("Seleccione una opción")
 OpcionesCalculadora.bind("<<ComboboxSelected>>", update_labels)
@@ -260,18 +342,35 @@ label4.grid(row=5, column=0)
 entry4 = tk.Entry(root)
 entry4.grid(row=5, column=1)
 
-label5 = tk.Label(root, text="Material:")
+label5 = tk.Label(root, text="Valor 5:")
 label5.grid(row=6, column=0)
-entry5 = ttk.Combobox(root)
+entry5 = tk.Entry(root)
 entry5.grid(row=6, column=1)
-label5.grid_remove()
-entry5.grid_remove()
+
+label6 = tk.Label(root, text="Valor 6:")
+label6.grid(row=7, column=0)
+entry6 = tk.Entry(root)
+entry6.grid(row=7, column=1)
+
+label7 = tk.Label(root, text="Material:")
+label7.grid(row=8, column=0)
+entry7 = ttk.Combobox(root)
+entry7.grid(row=8, column=1)
+label7.grid_remove()
+entry7.grid_remove()
+
+label8 = tk.Label(root, text="Gas Ideal:")
+label8.grid(row=9, column=0)
+entry8 = ttk.Combobox(root)
+entry8.grid(row=9, column=1)
+label8.grid_remove()
+entry8.grid_remove()
 
 BotonCalcular = tk.Button(root, text="Calcular", command=Calcular, width=20)
-BotonCalcular.grid(row=7, column=1, sticky='e', padx=10, pady=10)
+BotonCalcular.grid(row=11, column=1, sticky='e', padx=10, pady=10)
 
 Resultado = tk.Label(root, text="Resultado: ")
-Resultado.grid(row=8, column=0, columnspan=2, sticky='w', padx=10)
+Resultado.grid(row=13, column=0, columnspan=2, sticky='w', padx=10)
 
 # Run the application
 root.mainloop()
