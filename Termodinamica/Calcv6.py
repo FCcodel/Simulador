@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+import math
 
 class CalculadoraTermodinamica:
     def __init__(self):
@@ -77,7 +78,7 @@ class CalculadoraTermodinamica:
         """
         resultado = -presion * (volumenFinal - volumenInicial)
         return f"{resultado} J"
-    
+
 # Function to update labels based on selected option
 def update_labels(event):
     opcionElegida = OpcionesCalculadora.get()
