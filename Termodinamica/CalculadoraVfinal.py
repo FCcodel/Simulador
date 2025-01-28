@@ -81,6 +81,7 @@ class CalculadoraTermodinamica:
     
     def calcularTrabajoIsotermicoGases(self, masa, Temperatura, volumenInicial=None, volumenFinal=None, LongitudInicial=None, LongitudFinal=None, gasIdeal="Hidrógeno"):
         """
+        sólidos y líquidos
         W = n*R*T*ln(VolumenInicial/VolumenFinal)
         Masa Molar = g/mol
         n= masa(g)/Masa molar(g/mol) --> moles.
@@ -116,9 +117,51 @@ class CalculadoraTermodinamica:
         
         return f"{Trabajo:,} J"  # Formatear el resultado con miles
 
+    def calcularEnergiaInterna(self, masa, tempInicial, tempFinal, gasIdeal="Helio"):
+        """
+        ΔU = (3/2) * n * R * ΔT  --> gases monoatómicos con presión constante y volumen constante 
+        """
+        masaMolar_dict = {
+            "Hidrógeno": 2,
+            "Helio": 4,
+            "Nitrógeno": 28,
+            "Oxígeno": 32,
+            "Neón": 20,
+            "Argón": 40,
+            "Dióxido de carbono": 44,
+            "Metano": 16
+        }
+        masaMolar = masaMolar_dict.get(gasIdeal, 2)  # Valor por defecto es el del Helio
+        n = masa / masaMolar
+        R = 8.314
+        deltaT = tempFinal - tempInicial
+        energiaInterna = (3/2) * n * R * deltaT
+        return f"{energiaInterna:,} J"
 
+    def calcularPresionGasIdeal(self, volumen, temperatura, masa, gasIdeal="Hidrógeno"):
+        """
+        La presión en este contexto nos indica la fuerza que el gas ejerce sobre las paredes del recipiente que lo contiene
+        P = (n * R * T) / V
+        """
+        masaMolar_dict = {
+            "Hidrógeno": 2,
+            "Helio": 4,
+            "Nitrógeno": 28,
+            "Oxígeno": 32,
+            "Neón": 20,
+            "Argón": 40,
+            "Dióxido de carbono": 44,
+            "Metano": 16,
+            "Criptón": 83.798
+        }
+        masaMolar = masaMolar_dict.get(gasIdeal, 2)  # Valor por defecto es el del Hidrógeno
+        n = masa / masaMolar
+        R = 8.314
+        presion = (n * R * temperatura) / volumen
+        return f"{presion:,} Pa"
 
-# Function to update labels based on selected option
+# función que actualiza los labels en función de las opciones.
+
 def update_labels(event):
     # Ocultar todos los widgets primero
     label1.grid_remove()
@@ -237,7 +280,7 @@ def update_labels(event):
 
     elif opcionElegida == "Calcular Trabajo consumido en proceso de expansión isotérmica de un gas ideal":
         label1.config(text="Masa(m):")
-        label2.config(text="Temperatura(°K):")
+        label2.config(text="Temperatura (°K):")
         label3.config(text="Volumen Inicial (m³):")
         label4.config(text="Volumen Final (m³):")
         label5.config(text="Longitud Incial (m):")
@@ -260,6 +303,38 @@ def update_labels(event):
         entry8.config(state='readonly')
         entry8['values'] = ["Hidrógeno", "Helio", "Nitrógeno", "Oxígeno", "Neón", "Argón", "Dióxido de Carbono", "Metano"]
 
+    elif opcionElegida == "Calcular Energía Interna de un Gas Ideal Monoatómico":
+        label1.config(text="Masa(m):")
+        label2.config(text="Temperatura Inicial (°K):")
+        label3.config(text="Temperatura Final (°K):")
+        label8.config(text="Gas Monoatómico:")
+        label1.grid()
+        entry1.grid()
+        label2.grid()
+        entry2.grid()
+        label3.grid()
+        entry3.grid()
+        label8.grid()
+        entry8.grid()
+        entry8.config(state='readonly')
+        entry8['values'] = ["Helio", "Neón", "Argón", "Criptón", "Xenón", "Radón", "Oganesón"]
+
+    elif opcionElegida == "Calcular Presion de un Gas Ideal":
+            label1.config(text="Volumen(m³):")
+            label2.config(text="Temperatura(°K):")
+            label3.config(text="masa(g):")
+            label8.config(text="Gas Ideal:")
+            label1.grid()
+            entry1.grid()
+            label2.grid()
+            entry2.grid()
+            label3.grid()
+            entry3.grid()
+            label8.grid()
+            entry8.grid()
+            entry8.config(state='readonly')
+            entry8['values'] = ["Hidrógeno", "Helio", "Nitrógeno", "Oxígeno", "Neón", "Argón", "Dióxido de Carbono", "Metano"]
+
     else:
         label1.config(text="Valor 1:")
         label2.config(text="Valor 2:")
@@ -274,7 +349,7 @@ def update_labels(event):
         label4.grid()
         entry4.grid()
         
-# Function to perform calculation based on selected option
+# Función para tomar los valores ingresados y llamar a los metodos correspondientes
 def Calcular():
     option = OpcionesCalculadora.get()
     try:
@@ -334,7 +409,22 @@ def Calcular():
             longitudFinal = float(entry6.get())
             gasIdeal = entry8.get()
             result = calculadora.calcularTrabajoIsotermicoGases(masa,Temperatura, volumenInicial, volumenFinal,longitudInicial,longitudFinal,gasIdeal)
+
+        elif option == "Calcular Energía Interna de un Gas Ideal Monoatómico":
+            masa = float(entry1.get())
+            TemperaturaInicial = float(entry2.get())
+            TemperaturaFinal = float(entry3.get())
+            gasIdeal = entry8.get()
+            result = calculadora.calcularEnergiaInterna(masa,TemperaturaInicial,TemperaturaFinal,gasIdeal)    
         
+        elif option == "Calcular Presion de un Gas Ideal":
+            Volumen = float(entry1.get())
+            Temperatura = float(entry2.get())
+            masa = float(entry3.get())
+            gasIdeal = entry8.get()
+            result = calculadora.calcularPresionGasIdeal(Volumen,Temperatura,masa,gasIdeal)    
+            
+
         Resultado.config(text=f"Resultado: {result}")
     
     except ValueError:
@@ -353,7 +443,9 @@ root.geometry("420x380")
 # creo que las opciones y dropdown
 OpcionesCalculadora = ttk.Combobox(root, values=["Calcular Calor", "Calcular Masa", "Calcular Calor Especifico", "Calcular Cambio de Temperatura", 
 "Calcular Longitud Final en Expansión Térmica en Solidos","Calcular Volumen Final en Expansión Volumétrica en Liquidos y Gases",
-"Calcular Trabajo Consumido en Proceso Isobárico","Calcular Trabajo consumido en proceso de expansión isotérmica de un gas ideal"], width=62)
+"Calcular Trabajo Consumido en Proceso Isobárico","Calcular Trabajo consumido en proceso de expansión isotérmica de un gas ideal",
+"Calcular Energía Interna de un Gas Ideal Monoatómico","Calcular Presion de un Gas Ideal"], width=62)
+
 OpcionesCalculadora.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
 OpcionesCalculadora.set("Seleccione una opción")
 OpcionesCalculadora.bind("<<ComboboxSelected>>", update_labels)
