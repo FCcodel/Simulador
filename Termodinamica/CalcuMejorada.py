@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import math
+from PIL import Image, ImageTk 
 
 class CalculadoraTermodinamica:
     def __init__(self):
@@ -10,14 +11,14 @@ class CalculadoraTermodinamica:
         """
          q = m * c * ΔT
         """
-        resultado = masa * calorEsp * (tempFinal - tempInicial)
+        resultado = round(masa * calorEsp * (tempFinal - tempInicial),3)
         return f"{resultado} J"
 
     def calcularMasa(self, calor, calorEsp, tempInicial, tempFinal):
         """
         m = q / (c * ΔT)
         """
-        resultado = calor / (calorEsp * (tempFinal - tempInicial))
+        resultado = round(calor / (calorEsp * (tempFinal - tempInicial)),3)
         return f"{resultado} kg"
 
     def calcularCalorEspecifico(self, calor, masa, tempInicial, tempFinal):
@@ -76,7 +77,7 @@ class CalculadoraTermodinamica:
         """
         W = -P * (Vf - Vi)
         """
-        resultado = -presion * (volumenFinal - volumenInicial)
+        resultado = round (-presion * (volumenFinal - volumenInicial),2)
         return f"{resultado} J"
     
     def calcularTrabajoIsotermicoGases(self, masa, Temperatura, volumenInicial=None, volumenFinal=None, LongitudInicial=None, LongitudFinal=None, gasIdeal="Hidrógeno"):
@@ -160,21 +161,6 @@ class CalculadoraTermodinamica:
         presion = (n * R * temperatura) / volumen
         return f"{presion:,} Pa"
 
-    #Función para convertir Celsius a Kelvin y viceversa
-    def convertirTemperatura(valor, tipo):
-        """
-        Convierte la temperatura entre Celsius y Kelvin.
-        Si tipo es 'C', convierte de Celsius a Kelvin.
-        Si tipo es 'K', convierte de Kelvin a Celsius.
-        """
-        if tipo == 'C':
-            return valor + 273.15
-        elif tipo == 'K':
-            return valor - 273.15
-        else:
-            raise ValueError("Tipo debe ser 'C' para Celsius o 'K' para Kelvin.")
-    
-        
 # función que actualiza los labels en función de las opciones.
 
 def update_labels(event):
@@ -363,7 +349,6 @@ def update_labels(event):
         entry3.grid()
         label4.grid()
         entry4.grid()
-
         
 # Función para tomar los valores ingresados y llamar a los metodos correspondientes
 def Calcular():
@@ -446,20 +431,6 @@ def Calcular():
     except ValueError:
         Resultado.config(text="Por favor ingrese valores válidos.")
 
-def ConvertirTemperatura():
-    try:
-        if varConversion.get() == 1:
-            celsius = float(entryCelsius.get())
-            kelvin = calculadora.convertirTemperatura(celsius, 'C')
-            entryKelvin.delete(0, tk.END)
-            entryKelvin.insert(0, f"{kelvin:.2f}")
-        else:
-            kelvin = float(entryKelvin.get())
-            celsius = calculadora.convertirTemperatura(kelvin, 'K')
-            entryCelsius.delete(0, tk.END)
-            entryCelsius.insert(0, f"{celsius:.2f}")
-    except ValueError:
-        Resultado.config(text="Por favor ingrese valores válidos.")
 
 # Create instance of CalculadoraTermodinamica
 calculadora = CalculadoraTermodinamica()
@@ -469,7 +440,7 @@ root = tk.Tk()
 root.title("Calculadora Calorimetría")
 
 # Ajustar el tamaño de la ventana
-root.geometry("420x380")
+root.geometry("580x400")
 
 # creo que las opciones y dropdown
 OpcionesCalculadora = ttk.Combobox(root, values=["Calcular Calor", "Calcular Masa", "Calcular Calor Especifico", "Calcular Cambio de Temperatura", 
@@ -529,32 +500,64 @@ entry8.grid(row=9, column=1)
 label8.grid_remove()
 entry8.grid_remove()
 
-BotonCalcular = tk.Button(root, text="Calcular", command=Calcular, width=20)
-BotonCalcular.grid(row=12, column=1, sticky='e', padx=10, pady=10)
+BotonCalcular = tk.Button(root, text="Calcular", command=Calcular, width=18)
+BotonCalcular.grid(row=10, column=1, sticky='e',padx=7,pady=10)
 
-Resultado = tk.Label(root, text="Resultado: ")
-Resultado.grid(row=14, column=0, columnspan=2, sticky='w', padx=10)
+#Resultado = tk.Label(root, text="Resultado: ")
+#Resultado.grid(row=11, column=0, columnspan=2, sticky='w', padx=10)
+Resultado = tk.Label(root, text="Resultado: ", font=("Helvetica", 10, "bold"), relief="solid", borderwidth=1, padx=30, pady=5)
+Resultado.grid(row=11, column=0, sticky='w', padx=16)
 
 
-# Sección para conversión de temperaturas
-labelCelsius = tk.Label(root, text="Celsius:")
-labelCelsius.grid(row=9, column=0)
-entryCelsius = tk.Entry(root)
-entryCelsius.grid(row=9, column=1)
+def convertirTemperatura(value, unit):
+    if unit == 'C':
+        return value + 273.15  # Convertir Celsius a Kelvin
+    elif unit == 'K':
+        return value - 273.15  # Convertir Kelvin a Celsius
 
-labelKelvin = tk.Label(root, text="Kelvin:")
-labelKelvin.grid(row=10, column=0)
-entryKelvin = tk.Entry(root)
-entryKelvin.grid(row=10, column=1)
+def handle_conversion(event):
+    if event.widget == celsius_entry:
+        try:
+            celsius = float(celsius_entry.get())
+            kelvin = convertirTemperatura(celsius, 'C')
+            kelvin_entry.delete(0, tk.END)
+            kelvin_entry.insert(0, f"{kelvin:.2f}")
+        except ValueError:
+            kelvin_entry.delete(0, tk.END)
+    elif event.widget == kelvin_entry:
+        try:
+            kelvin = float(kelvin_entry.get())
+            celsius = convertirTemperatura(kelvin, 'K')
+            celsius_entry.delete(0, tk.END)
+            celsius_entry.insert(0, f"{celsius:.2f}")
+        except ValueError:
+            celsius_entry.delete(0, tk.END)
 
-# Checkbox para seleccionar el tipo de conversión
-varConversion = tk.IntVar()
-checkboxConversion = tk.Checkbutton(root, text="Convertir Grados Celsius a Kelvin", variable=varConversion)
-checkboxConversion.grid(row=11, column=0, columnspan=2)
+# Campos de entrada para Celsius y Kelvin
+conversion_label = tk.Label(root, text="Convertir Grados:")
+conversion_label.grid(row=18, column=0, columnspan=3, pady=(5, 0))
 
-# Botón para realizar la conversión
-botonConvertir = tk.Button(root, text="Convertir", command=ConvertirTemperatura)
-botonConvertir.grid(row=12, column=0, columnspan=2, pady=10)
+celsius_label = tk.Label(root, text="°C")
+celsius_label.grid(row=19, column=0, padx=(0, 2))
+celsius_entry = tk.Entry(root, width=20)
+celsius_entry.grid(row=20, column=0, padx=(0, 2), pady=(0, 2))
+
+# Reemplazar el label de texto con una imagen de flecha de doble sentido
+arrow_image = Image.open("double_arrow.png")  # Asegúrate de tener esta imagen en el mismo directorio
+arrow_image = arrow_image.resize((20, 20), Image.Resampling.LANCZOS)
+arrow_photo = ImageTk.PhotoImage(arrow_image)
+arrow_label = tk.Label(root, image=arrow_photo)
+arrow_label.image = arrow_photo  # Mantener una referencia a la imagen
+arrow_label.grid(row=20, column=1, padx=(0, 2), pady=(0, 2))
+
+kelvin_label = tk.Label(root, text="°K")
+kelvin_label.grid(row=19, column=2, padx=(0, 2))
+kelvin_entry = tk.Entry(root, width=20)
+kelvin_entry.grid(row=20, column=2, padx=(0, 2), pady=(0, 2))
+
+# Vincular eventos de cambio de texto
+celsius_entry.bind("<KeyRelease>", handle_conversion)
+kelvin_entry.bind("<KeyRelease>", handle_conversion)
 
 # Run the application
 root.mainloop()
