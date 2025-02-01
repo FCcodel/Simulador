@@ -161,9 +161,24 @@ class CalculadoraTermodinamica:
         presion = (n * R * temperatura) / volumen
         return f"{presion:,} Pa"
 
+
+# función que limpia los campos de entrada
+def limpiar_campos():
+    entry1.delete(0, tk.END)
+    entry2.delete(0, tk.END)
+    entry3.delete(0, tk.END)
+    entry4.delete(0, tk.END)
+    entry5.delete(0, tk.END)
+    entry6.delete(0, tk.END)
+    entry7.delete(0, tk.END)
+    entry8.set('')
+
+
+
 # función que actualiza los labels en función de las opciones.
 
 def update_labels(event):
+    limpiar_campos()  # Limpiar los campos de entrada
     # Ocultar todos los widgets primero
     label1.grid_remove()
     entry1.grid_remove()
