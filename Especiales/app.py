@@ -58,3 +58,7 @@ def laplace_transform_suma(ft):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+    ##Origen https://blog.espol.edu.ec/telg1001/transformada-de-laplace-para-ft-con-sympy-python/ ##

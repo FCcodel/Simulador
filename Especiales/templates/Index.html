@@ -6,18 +6,45 @@
     <title>Transformada de Laplace</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        select {
+            width: 100%;
+            font-size: 1.2em;
+            height: 3em; /* Ajusta la altura según sea necesario */
+        }
+        .math-option {
+            display: block;
+            white-space: pre-wrap;
+        }
+    </style>
 </head>
 <body>
     <h1>Calculadora de Transformada de Laplace</h1>
     <label for="equation-select">Selecciona una ecuación:</label>
     <select id="equation-select">
-        <option value="eq1">$$e^{-a t} \cdot u(t)$$</option>
-        <option value="eq2">$$3e^{-2t} \cdot u(t) + e^{-t} \cos(3t) \cdot u(t)$$</option>
-        <option value="eq3">$$u(t) - u(t-2)$$</option>
+        <option value="eq1" class="math-option">\( e^{-a t} \cdot u(t) \)</option>
+        <option value="eq2" class="math-option">\( 3e^{-2t} \cdot u(t) + e^{-t} \cos(3t) \cdot u(t) \)</option>
+        <option value="eq3" class="math-option">\( u(t) - u(t-2) \)</option>
     </select>
     <button onclick="calculateLaplace()">Calcular Transformada L</button>
     <p id="result"></p>
 
-    <script src="/static/script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            MathJax.typesetPromise();
+        });
+
+        function calculateLaplace() {
+            const select = document.getElementById('equation-select');
+            const selectedEquation = select.value;
+
+            fetch(`/calculate?equation=${selectedEquation}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('result').innerHTML = `$$${data.result}$$`;
+                    MathJax.typesetPromise();
+                });
+        }
+    </script>
 </body>
 </html>
