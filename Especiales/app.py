@@ -15,11 +15,11 @@ def calculate():
     a = symbols('a', real=True)
 
     if equation == 'eq1':
-        ft = exp(-a*t) * u
-    elif equation == 'eq2':
-        ft = 3 * exp(-2*t) * u + exp(-t) * cos(3*t) * u
-    elif equation == 'eq3':
         ft = u - u.subs(t, t-2)
+    elif equation == 'eq2':
+        ft = exp(-a*t) * u
+    elif equation == 'eq3':
+        ft = 3 * exp(-2*t) * u + exp(-t) * cos(3*t) * u
     else:
         return jsonify(result="Ecuación no válida")
 
@@ -58,7 +58,5 @@ def laplace_transform_suma(ft):
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
 
     ##Origen https://blog.espol.edu.ec/telg1001/transformada-de-laplace-para-ft-con-sympy-python/ ##

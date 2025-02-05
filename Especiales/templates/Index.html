@@ -12,39 +12,20 @@
             font-size: 1.2em;
             height: 3em; /* Ajusta la altura según sea necesario */
         }
-        .math-option {
-            display: block;
-            white-space: pre-wrap;
-        }
     </style>
 </head>
 <body>
     <h1>Calculadora de Transformada de Laplace</h1>
-    <label for="equation-select">Selecciona una ecuación:</label>
-    <select id="equation-select">
-        <option value="eq1" class="math-option">\( e^{-a t} \cdot u(t) \)</option>
-        <option value="eq2" class="math-option">\( 3e^{-2t} \cdot u(t) + e^{-t} \cos(3t) \cdot u(t) \)</option>
-        <option value="eq3" class="math-option">\( u(t) - u(t-2) \)</option>
+    <label for="equation-select">Elija una opción:</label>
+    <select id="equation-select" onchange="updateEquation()">
+        <option value="eq1">Función de grado 0 con suma de términos y desplazamiento</option>
+        <option value="eq2">Función exponencial de primer grado</option>
+        <option value="eq3">Función exponencial de segundo grado con coseno</option>
     </select>
+    <p id="equation"></p>
     <button onclick="calculateLaplace()">Calcular Transformada L</button>
     <p id="result"></p>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            MathJax.typesetPromise();
-        });
-
-        function calculateLaplace() {
-            const select = document.getElementById('equation-select');
-            const selectedEquation = select.value;
-
-            fetch(`/calculate?equation=${selectedEquation}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('result').innerHTML = `$$${data.result}$$`;
-                    MathJax.typesetPromise();
-                });
-        }
-    </script>
+    <script src="/static/script.js"></script>
 </body>
 </html>
