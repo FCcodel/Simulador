@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformada de Laplace</title>
+</head>
+<body>
+    <h1>Calculadora de Transformada de Laplace</h1>
+    <label for="equation-select">Selecciona una ecuación:</label>
+    <select id="equation-select">
+        <option value="eq1">exp(-a*t) * u(t)</option>
+        <option value="eq2">3*exp(-2*t)*u(t) + exp(-t)*cos(3*t)*u(t)</option>
+        <option value="eq3">u(t) - u(t-2)</option>
+    </select>
+    <button onclick="calculateLaplace()">Calcular Transformada L</button>
+    <p id="result"></p>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
