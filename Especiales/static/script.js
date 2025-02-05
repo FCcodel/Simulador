@@ -5,6 +5,7 @@ function calculateLaplace() {
     fetch(`/calculate?equation=${selectedEquation}`)
         .then(response => response.json())
         .then(data => {
-            document.getElementById('result').innerText = data.result;
+            document.getElementById('result').innerHTML = `$$${data.result}$$`;
+            MathJax.typesetPromise();
         });
 }

@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template
-from sympy import symbols, Function, Eq, laplace_transform, exp, cos, sin, Heaviside, solve
+from sympy import symbols, Function, Eq, laplace_transform, exp, cos, sin, Heaviside, latex
 from sympy.abc import s, t
 
 app = Flask(__name__)
@@ -26,7 +26,7 @@ def calculate():
     # Transformada de Laplace
     Fs = laplace_transform_suma(ft)
 
-    return jsonify(result=str(Fs))
+    return jsonify(result=latex(Fs))
 
 def laplace_transform_suma(ft):
     '''Transformada de Laplace de suma de términos, separa constantes para conservar en resultado'''
