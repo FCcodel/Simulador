@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template
 from sympy import symbols, Function, Eq, laplace_transform, exp, cos, sin, Heaviside, latex
 from sympy.abc import s, t
-
+import sympy as sym
 app = Flask(__name__)
 
 @app.route('/')
@@ -19,7 +19,7 @@ def calculate():
     elif equation == 'eq2':
         ft = exp(-a*t) * u
     elif equation == 'eq3':
-        ft = 3 * exp(-2*t) * u + exp(-t) * cos(3*t) * u
+        ft = sym.exp(-2*t)*u + sym.exp(-t)*sym.cos(3*t)*u
     else:
         return jsonify(result="Ecuación no válida")
 
@@ -45,7 +45,11 @@ def laplace_transform_suma(ft):
     ft = ft.expand()  # Expresión de sumas
     ft = ft.powsimp() # Simplifica exponentes
 
-    term_suma = ft.args
+    if ft.is_Add:
+        term_suma = ft.args
+    else:
+        term_suma = [ft]
+    
     Fs = 0
     for term_k in term_suma:
         term_k, constante = separa_constante(term_k)

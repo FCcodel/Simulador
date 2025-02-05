@@ -10,9 +10,9 @@ function updateEquation() {
     if (selectedEquation === 'eq1') {
         equationText = '$$f(t) = u(t) - u(t-2)$$';
     } else if (selectedEquation === 'eq2') {
-        equationText = '$$f(t) = e^{-a t} \cdot u(t)$$';
+        equationText = '$$f(t) = e^{-a t} \. u(t)$$';
     } else if (selectedEquation === 'eq3') {
-        equationText = '$$f(t) = 3e^{-2t} \cdot u(t) + e^{-t} \cos(3t) \cdot u(t)$$';
+        equationText = '$$f(t) = 3e^{-2t} \. u(t) + e^{-t} \cos(3t) \. u(t)$$';
     }
 
     document.getElementById('equation').innerHTML = `Ecuación: ${equationText}`;
