@@ -7,10 +7,44 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        select {
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label, select, button {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+
+        table {
             width: 100%;
-            font-size: 1.2em;
-            height: 3em; /* Ajusta la altura según sea necesario */
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 5px;
+        }
+
+        .label {
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .value {
+            text-align: left;
         }
     </style>
 </head>

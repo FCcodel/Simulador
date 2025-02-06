@@ -64,3 +64,5 @@ if __name__ == '__main__':
     app.run(debug=True)
 
     ##Origen https://blog.espol.edu.ec/telg1001/transformada-de-laplace-para-ft-con-sympy-python/ ##
+
+    #ecuación 3: Referencia: Oppenheim Ejemplo 9.4 p658

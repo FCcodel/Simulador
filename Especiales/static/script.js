@@ -8,11 +8,11 @@ function updateEquation() {
     let equationText = '';
 
     if (selectedEquation === 'eq1') {
-        equationText = '$$f(t) = u(t) - u(t-2)$$';
+        equationText = '$$f(t) = μ(t) - μ(t-2)$$';
     } else if (selectedEquation === 'eq2') {
-        equationText = '$$f(t) = e^{-a t} \. u(t)$$';
+        equationText = '$$f(t) = e^{-a t} \. μ(t)$$';
     } else if (selectedEquation === 'eq3') {
-        equationText = '$$f(t) = 3e^{-2t} \. u(t) + e^{-t} \cos(3t) \. u(t)$$';
+        equationText = '$$f(t) = 3e^{-2t} \. μ(t) + e^{-t} .\cos(3t) \. μ(t)$$';
     }
 
     document.getElementById('equation').innerHTML = `Ecuación: ${equationText}`;
