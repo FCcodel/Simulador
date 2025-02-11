@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 
+
 def osciladorArmonico(t, y, k, m):
     x, v = y
     dxdt = v
@@ -49,12 +50,19 @@ def obtener_valores():
     ConstanteResorteK = float(constante_resorte_entry.get())
     Masa = float(masa_entry.get())
     TiempoFinal = float(tiempo_final_entry.get())
-    FuncionSolucion = resolverOsciladorArmonico(PosicionInicial, VelocidadInicial,ConstanteResorteK, Masa, TiempoFinal)
+    FuncionSolucion = resolverOsciladorArmonico(PosicionInicial, VelocidadInicial, ConstanteResorteK, Masa, TiempoFinal)
     graficar_resultados(FuncionSolucion, TiempoFinal)
+  
+
 
 # Configuración de la ventana principal
 root = tk.Tk()
 root.title("Simulación de Oscilador Armónico Simple")
+
+# Ajustar el tamaño de la ventana
+root.geometry("800x400")  # Ancho x Alto
+root.minsize(400, 300)    # Tamaño mínimo
+root.maxsize(800, 600)    # Tamaño máximo
 
 # Entrada para la posición inicial
 posicion_inicial_label = tk.Label(root, text="Posición Inicial (m)")
