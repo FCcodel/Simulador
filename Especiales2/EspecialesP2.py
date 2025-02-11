@@ -14,22 +14,17 @@ def osciladorArmonico(t, y, k, m):
 
 #La función solve_ivp de la biblioteca scipy.integrate en Python 
 # se utiliza para resolver ecuaciones diferenciales ordinarias (EDO) 
-#solve initial value problem 
-# donde dt/dy=f(t,y)
-# fun: La función que define el sistema de ecuaciones 
-# Debe tener la forma fun(t, y,) y devolver un array que representa dy/dt
-# t_span: Una tupla (T0,Tf)que define el intervalo de integración desde el tiempo inicial 
-# y0: Un array que contiene las condiciones iniciales para las variables dependientes.
-# args: Tupla de argumentos adicionales que se pasan a la función fun.
+# Limites: Una tupla (T0,Tf) que define el intervalo de integración desde el tiempo inicial 
+# CondicionesIniciales: Un array que contiene las condiciones iniciales para las variables dependientes.
 #La salida de solve_ivp es un objeto que contiene la solución del sistema de ecuaciones diferenciales. Los atributos más importantes son:
 # t: Los puntos de tiempo en los que se evaluó la solución.
-#y: La solución del sistema en los puntos de tiempo correspondientes.
-#sol: Una función que permite evaluar la solución en cualquier punto dentro del intervalo de integración.
+# y: La solución del sistema en los puntos de tiempo correspondientes.
+#FuncionSolucion: Una función que permite evaluar la solución en cualquier punto dentro del intervalo de integración. 
 
 def resolverOsciladorArmonico(PosicionInicial, VelocidadInicial, ConstanteResorteK, Masa, TiempoFinal):
-    y0 = [PosicionInicial, VelocidadInicial]
-    LimitesIntegracion = (0, TiempoFinal)
-    FuncionSolucion = solve_ivp(osciladorArmonico, LimitesIntegracion, y0, args=(ConstanteResorteK, Masa), dense_output=True)
+    CondicionesIniciales = [PosicionInicial, VelocidadInicial]
+    Limites = (0, TiempoFinal)
+    FuncionSolucion = solve_ivp(osciladorArmonico, Limites, CondicionesIniciales, args=(ConstanteResorteK, Masa), dense_output=True)
     return FuncionSolucion
 
 def graficar_resultados(sol, t_final):
@@ -60,7 +55,7 @@ root = tk.Tk()
 root.title("Simulación de Oscilador Armónico Simple")
 
 # Ajustar el tamaño de la ventana
-root.geometry("800x400")  # Ancho x Alto
+root.geometry("550x300")  # Ancho x Alto
 root.minsize(400, 300)    # Tamaño mínimo
 root.maxsize(800, 600)    # Tamaño máximo
 
