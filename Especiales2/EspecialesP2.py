@@ -4,12 +4,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 
-
 def osciladorArmonico(t, y, k, m):
     x, v = y
     dxdt = v
     dvdt = -k/m * x
     return [dxdt, dvdt]
+
 
 
 #La función solve_ivp de la biblioteca scipy.integrate en Python 
@@ -45,17 +45,27 @@ def obtener_valores():
     ConstanteResorteK = float(constante_resorte_entry.get())
     Masa = float(masa_entry.get())
     TiempoFinal = float(tiempo_final_entry.get())
+    
+    # Calcular la frecuencia angular
+    omega = np.sqrt(ConstanteResorteK / Masa)
+    
+    # Definir las funciones x(t) y v(t)
+    x_t_func = f"x(t) = {PosicionInicial} * cos({omega} * t) + ({VelocidadInicial} / {omega}) * sin({omega} * t)"
+    v_t_func = f"v(t) = -{PosicionInicial} * {omega} * sin({omega} * t) + {VelocidadInicial} * cos({omega} * t)"
+    
+    # Mostrar las funciones en la interfaz gráfica
+    x_t_label.config(text=f"Función x(t): {x_t_func}")
+    v_t_label.config(text=f"Función v(t): {v_t_func}")
+    
     FuncionSolucion = resolverOsciladorArmonico(PosicionInicial, VelocidadInicial, ConstanteResorteK, Masa, TiempoFinal)
     graficar_resultados(FuncionSolucion, TiempoFinal)
-  
-
 
 # Configuración de la ventana principal
 root = tk.Tk()
 root.title("Simulación de Oscilador Armónico Simple")
 
 # Ajustar el tamaño de la ventana
-root.geometry("550x300")  # Ancho x Alto
+root.geometry("550x400")  # Ancho x Alto
 root.minsize(400, 300)    # Tamaño mínimo
 root.maxsize(800, 600)    # Tamaño máximo
 
@@ -92,6 +102,12 @@ tiempo_final_entry.pack()
 # Botón para obtener los valores y resolver la ecuación
 submit_button = tk.Button(root, text="Resolver", command=obtener_valores)
 submit_button.pack()
+
+# Etiquetas para mostrar las funciones x(t) y v(t)
+x_t_label = tk.Label(root, text="Función x(t):")
+x_t_label.pack()
+v_t_label = tk.Label(root, text="Función v(t):")
+v_t_label.pack()
 
 # Ejecutar la aplicación
 root.mainloop()
