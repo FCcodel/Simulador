@@ -3,28 +3,15 @@ from tkinter import ttk
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
+from matplotlib.animation import FuncAnimation
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
-
-
-#Esta función define el sistema de ecuaciones diferenciales del oscilador armónico simple. 
-# y es una lista que contiene la posición x y la velocidad v. 
-# La función devuelve dx2/dt +kx/m = 0
+# Esta función define el sistema de ecuaciones diferenciales del oscilador armónico simple.
 def osciladorArmonico(t, y, k, m):
     x, v = y
     dxdt = v
     dvdt = -k/m * x
     return [dxdt, dvdt]
-
-
-
-#La función solve_ivp de la biblioteca scipy.integrate en Python 
-# se utiliza para resolver ecuaciones diferenciales ordinarias (EDO) 
-# Limites: Una tupla (T0,Tf) que define el intervalo de integración desde el tiempo inicial 
-# CondicionesIniciales: Un array que contiene las condiciones iniciales para las variables dependientes.
-#La salida de solve_ivp es un objeto que contiene la solución del sistema de ecuaciones diferenciales. Los atributos más importantes son:
-# t: Los puntos de tiempo en los que se evaluó la solución.
-# y: La solución del sistema en los puntos de tiempo correspondientes.
-#FuncionSolucion: Una función que permite evaluar la solución en cualquier punto dentro del intervalo de integración. 
 
 def resolverOsciladorArmonico(PosicionInicial, VelocidadInicial, ConstanteResorteK, Masa, TiempoFinal):
     CondicionesIniciales = [PosicionInicial, VelocidadInicial]
@@ -32,18 +19,41 @@ def resolverOsciladorArmonico(PosicionInicial, VelocidadInicial, ConstanteResort
     FuncionSolucion = solve_ivp(osciladorArmonico, Limites, CondicionesIniciales, args=(ConstanteResorteK, Masa), dense_output=True)
     return FuncionSolucion
 
-#sol(t) evalua la solución en los puntos de tiempo definidos.. de 0 a t.
 def graficar_resultados(FuncionSolucion, TiempoFinal):
     t = np.linspace(0, TiempoFinal, 300)
     z = FuncionSolucion.sol(t)
-    plt.plot(t, z[0], label='Posición (x)')
-    plt.plot(t, z[1], label='Velocidad (v)')
+    
+    fig, ax = plt.subplots()
+    ax.set_xlim(0, TiempoFinal)
+    ax.set_ylim(min(min(z[0]), min(z[1])) - 1, max(max(z[0]), max(z[1])) + 1)
+    line1, = ax.plot([], [], label='Posición (x)')
+    line2, = ax.plot([], [], label='Velocidad (v)')
+    
+    def init():
+        line1.set_data([], [])
+        line2.set_data([], [])
+        return line1, line2
+    
+    def update(frame):
+        line1.set_data(t[:frame], z[0][:frame])
+        line2.set_data(t[:frame], z[1][:frame])
+        return line1, line2
+    
+    ani = FuncAnimation(fig, update, frames=len(t), init_func=init, blit=True)
     plt.xlabel('Tiempo (s)')
     plt.ylabel('Magnitud')
     plt.title('Oscilador Armónico Simple')
     plt.legend()
     plt.grid()
     plt.show()
+
+def mostrar_ecuacion_latex(ecuacion, label):
+    fig, ax = plt.subplots()
+    ax.text(0.5, 0.5, ecuacion, fontsize=15, ha='center', va='center')
+    ax.axis('off')
+    canvas = FigureCanvasTkAgg(fig, master=label)
+    canvas.draw()
+    canvas.get_tk_widget().pack()
 
 def obtener_valores():
     PosicionInicial = float(posicion_inicial_entry.get())
@@ -55,13 +65,17 @@ def obtener_valores():
     # Calcular la frecuencia angular
     omega = np.sqrt(ConstanteResorteK / Masa)
     
-    # Definir las funciones x(t) y v(t)
-    x_t_func = f"x(t) = {PosicionInicial} * cos({omega} * t) + ({VelocidadInicial} / {omega}) * sin({omega} * t)"
-    v_t_func = f"v(t) = -{PosicionInicial} * {omega} * sin({omega} * t) + {VelocidadInicial} * cos({omega} * t)"
+    # Definir las funciones x(t) y v(t) en formato LaTeX
+    x_t_func = rf"$x(t) = {PosicionInicial} \cos({omega} t) + \frac{{{VelocidadInicial}}}{{{omega}}} \sin({omega} t)$"
+    v_t_func = rf"$v(t) = -{PosicionInicial} {omega} \sin({omega} t) + {VelocidadInicial} \cos({omega} t)$"
     
     # Mostrar las funciones en la interfaz gráfica
-    x_t_label.config(text=f"Función x(t): {x_t_func}")
-    v_t_label.config(text=f"Función v(t): {v_t_func}")
+    for widget in x_t_label.winfo_children():
+        widget.destroy()
+    for widget in v_t_label.winfo_children():
+        widget.destroy()
+    mostrar_ecuacion_latex(x_t_func, x_t_label)
+    mostrar_ecuacion_latex(v_t_func, v_t_label)
     
     FuncionSolucion = resolverOsciladorArmonico(PosicionInicial, VelocidadInicial, ConstanteResorteK, Masa, TiempoFinal)
     graficar_resultados(FuncionSolucion, TiempoFinal)
