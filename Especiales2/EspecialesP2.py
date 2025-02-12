@@ -4,6 +4,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 
+
+
+#Esta función define el sistema de ecuaciones diferenciales del oscilador armónico simple. 
+# y es una lista que contiene la posición x y la velocidad v. 
+# La función devuelve dx2/dt +kx/m = 0
 def osciladorArmonico(t, y, k, m):
     x, v = y
     dxdt = v
@@ -27,9 +32,10 @@ def resolverOsciladorArmonico(PosicionInicial, VelocidadInicial, ConstanteResort
     FuncionSolucion = solve_ivp(osciladorArmonico, Limites, CondicionesIniciales, args=(ConstanteResorteK, Masa), dense_output=True)
     return FuncionSolucion
 
-def graficar_resultados(sol, t_final):
-    t = np.linspace(0, t_final, 300)
-    z = sol.sol(t)
+#sol(t) evalua la solución en los puntos de tiempo definidos.. de 0 a t.
+def graficar_resultados(FuncionSolucion, TiempoFinal):
+    t = np.linspace(0, TiempoFinal, 300)
+    z = FuncionSolucion.sol(t)
     plt.plot(t, z[0], label='Posición (x)')
     plt.plot(t, z[1], label='Velocidad (v)')
     plt.xlabel('Tiempo (s)')
