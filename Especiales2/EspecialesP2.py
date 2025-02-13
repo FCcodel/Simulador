@@ -13,6 +13,15 @@ def osciladorArmonico(t, y, k, m):
     dvdt = -k/m * x
     return [dxdt, dvdt]
 
+#La función solve_ivp de la biblioteca scipy.integrate en Python 
+# se utiliza para resolver ecuaciones diferenciales ordinarias (EDO) 
+# Limites: Una tupla (T0,Tf) que define el intervalo de integración desde el tiempo inicial 
+# CondicionesIniciales: Un array que contiene las condiciones iniciales para las variables dependientes.
+#La salida de solve_ivp es un objeto que contiene la solución del sistema de ecuaciones diferenciales. Los atributos más importantes son:
+# t: Los puntos de tiempo en los que se evaluó la solución.
+# y: La solución del sistema en los puntos de tiempo correspondientes.
+#FuncionSolucion: Una función que permite evaluar la solución en cualquier punto dentro del intervalo de integración. 
+
 def resolverOsciladorArmonico(PosicionInicial, VelocidadInicial, ConstanteResorteK, Masa, TiempoFinal):
     CondicionesIniciales = [PosicionInicial, VelocidadInicial]
     Limites = (0, TiempoFinal)
@@ -45,15 +54,12 @@ def graficar_resultados(FuncionSolucion, TiempoFinal):
     plt.title('Oscilador Armónico Simple')
     plt.legend()
     plt.grid()
-    plt.show()
-
-def mostrar_ecuacion_latex(ecuacion, label):
-    fig, ax = plt.subplots()
-    ax.text(0.5, 0.5, ecuacion, fontsize=15, ha='center', va='center')
-    ax.axis('off')
-    canvas = FigureCanvasTkAgg(fig, master=label)
+    
+    # Integrar el gráfico en la interfaz Tkinter
+    canvas = FigureCanvasTkAgg(fig, master=root)
     canvas.draw()
     canvas.get_tk_widget().pack()
+    return canvas
 
 def obtener_valores():
     PosicionInicial = float(posicion_inicial_entry.get())
@@ -65,29 +71,54 @@ def obtener_valores():
     # Calcular la frecuencia angular
     omega = np.sqrt(ConstanteResorteK / Masa)
     
-    # Definir las funciones x(t) y v(t) en formato LaTeX
-    x_t_func = rf"$x(t) = {PosicionInicial} \cos({omega} t) + \frac{{{VelocidadInicial}}}{{{omega}}} \sin({omega} t)$"
-    v_t_func = rf"$v(t) = -{PosicionInicial} {omega} \sin({omega} t) + {VelocidadInicial} \cos({omega} t)$"
+    # Redondear los valores a un máximo de dos decimales
+    PosicionInicial = round(PosicionInicial, 2) if PosicionInicial % 1 != 0 else int(PosicionInicial)
+    VelocidadInicial = round(VelocidadInicial, 2) if VelocidadInicial % 1 != 0 else int(VelocidadInicial)
+    omega = round(omega, 2) if omega % 1 != 0 else int(omega)
+    
+    # Definir las funciones x(t) y v(t) en formato texto
+    #x(t)=Acos(ωt)+Bsin(ωt)  --> en x(0) = A --> A es la posiciónInicial. Si derivo.. v(0)= Bω --> B= v(0)/w  osea Velocidad Inicial / frecuencia angular 
+    #x(t) = {PosicionInicial}*cos({omega} t) + {VelocidadInicial}/{omega} sin({omega} t)
+    #v(t)= -wA.sen (wt)
+    #v(t)=−x(0)ω sin(ωt) + v(0).cos(ωt)
+    #v(t) = -{PosicionInicial}*{omega} sin({omega} t) + {VelocidadInicial} cos({omega} t)
+    x_t_func_parts = []
+    if PosicionInicial != 0:
+        x_t_func_parts.append(f"{PosicionInicial} cos({omega} t)")
+    if VelocidadInicial != 0:
+        x_t_func_parts.append(f"{VelocidadInicial}/{omega} sin({omega} t)")
+    
+    x_t_func = " + ".join(x_t_func_parts)
+    
+    v_t_func_parts = []
+    if PosicionInicial != 0:
+        v_t_func_parts.append(f"-{PosicionInicial * omega} sin({omega} t)")
+    if VelocidadInicial != 0:
+        v_t_func_parts.append(f"{VelocidadInicial} cos({omega} t)")
+    
+    v_t_func = " + ".join(v_t_func_parts)
     
     # Mostrar las funciones en la interfaz gráfica
-    for widget in x_t_label.winfo_children():
-        widget.destroy()
-    for widget in v_t_label.winfo_children():
-        widget.destroy()
-    mostrar_ecuacion_latex(x_t_func, x_t_label)
-    mostrar_ecuacion_latex(v_t_func, v_t_label)
+    x_t_label.config(text=f"x(t) = {x_t_func}")
+    v_t_label.config(text=f"v(t) = {v_t_func}")
     
     FuncionSolucion = resolverOsciladorArmonico(PosicionInicial, VelocidadInicial, ConstanteResorteK, Masa, TiempoFinal)
-    graficar_resultados(FuncionSolucion, TiempoFinal)
+    
+    # Limpiar el gráfico anterior si existe
+    global canvas
+    if canvas:
+        canvas.get_tk_widget().pack_forget()
+    
+    canvas = graficar_resultados(FuncionSolucion, TiempoFinal)
 
 # Configuración de la ventana principal
 root = tk.Tk()
 root.title("Simulación de Oscilador Armónico Simple")
 
 # Ajustar el tamaño de la ventana
-root.geometry("550x400")  # Ancho x Alto
+root.geometry("550x600")  # Ancho x Alto
 root.minsize(400, 300)    # Tamaño mínimo
-root.maxsize(800, 600)    # Tamaño máximo
+root.maxsize(800, 800)    # Tamaño máximo
 
 # Entrada para la posición inicial
 posicion_inicial_label = tk.Label(root, text="Posición Inicial (m)")
@@ -128,6 +159,9 @@ x_t_label = tk.Label(root, text="Función x(t):")
 x_t_label.pack()
 v_t_label = tk.Label(root, text="Función v(t):")
 v_t_label.pack()
+
+# Variable global para el canvas del gráfico
+canvas = None
 
 # Ejecutar la aplicación
 root.mainloop()
