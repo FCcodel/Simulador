@@ -133,49 +133,54 @@ root.geometry("550x700")  # Ancho x Alto
 root.minsize(400, 300)    # Tamaño mínimo
 root.maxsize(800, 800)    # Tamaño máximo
 
+
+# Crear un frame para los controles
+frame_controles = tk.Frame(root)
+frame_controles.pack(anchor=tk.N, padx=20, pady=20)
+
 # Entrada para la posición inicial
-posicion_inicial_label = tk.Label(root, text="Posición Inicial (m)")
+posicion_inicial_label = tk.Label(frame_controles, text="Posición Inicial (m)")
 posicion_inicial_label.pack()
-posicion_inicial_entry = tk.Entry(root)
+posicion_inicial_entry = tk.Entry(frame_controles)
 posicion_inicial_entry.pack()
 
 # Entrada para la velocidad inicial
-velocidad_inicial_label = tk.Label(root, text="Velocidad Inicial (m/s)")
+velocidad_inicial_label = tk.Label(frame_controles, text="Velocidad Inicial (m/s)")
 velocidad_inicial_label.pack()
-velocidad_inicial_entry = tk.Entry(root)
+velocidad_inicial_entry = tk.Entry(frame_controles)
 velocidad_inicial_entry.pack()
 
 # Entrada para la constante del resorte
-constante_resorte_label = tk.Label(root, text="Constante del Resorte (N/m)")
+constante_resorte_label = tk.Label(frame_controles, text="Constante del Resorte (N/m)")
 constante_resorte_label.pack()
-constante_resorte_entry = tk.Entry(root)
+constante_resorte_entry = tk.Entry(frame_controles)
 constante_resorte_entry.pack()
 
 # Entrada para la masa
-masa_label = tk.Label(root, text="Masa (kg)")
+masa_label = tk.Label(frame_controles, text="Masa (kg)")
 masa_label.pack()
-masa_entry = tk.Entry(root)
+masa_entry = tk.Entry(frame_controles)
 masa_entry.pack()
 
 # Entrada para el tiempo final
-tiempo_final_label = tk.Label(root, text="Tiempo Final (s)")
+tiempo_final_label = tk.Label(frame_controles, text="Tiempo Final (s)")
 tiempo_final_label.pack()
-tiempo_final_entry = tk.Entry(root)
+tiempo_final_entry = tk.Entry(frame_controles)
 tiempo_final_entry.pack()
 
 # Botón para obtener los valores y resolver la ecuación
-submit_button = tk.Button(root, text="Resolver", command=obtener_valores)
+submit_button = tk.Button(frame_controles, text="Resolver", command=obtener_valores)
 submit_button.pack()
 
-# Botón para limpiar los campos y el gráfico
-clear_button = tk.Button(root, text="Limpiar", command=limpiar_campos)
-clear_button.pack()
-
 # Etiquetas para mostrar las funciones x(t) y v(t)
-x_t_label = tk.Label(root, text="Función x(t):")
+x_t_label = tk.Label(frame_controles, text="Función x(t):")
 x_t_label.pack()
-v_t_label = tk.Label(root, text="Función v(t):")
+v_t_label = tk.Label(frame_controles, text="Función v(t):")
 v_t_label.pack()
+
+# Botón para limpiar los campos y el gráfico
+clear_button = tk.Button(root, text="Reiniciar", command=limpiar_campos)
+clear_button.pack(anchor=tk.SE, padx=20, pady=20)
 
 # Variable global para el canvas del gráfico
 canvas = None
