@@ -111,6 +111,19 @@ def obtener_valores():
     
     canvas = graficar_resultados(FuncionSolucion, TiempoFinal)
 
+def limpiar_campos():
+    posicion_inicial_entry.delete(0, tk.END)
+    velocidad_inicial_entry.delete(0, tk.END)
+    constante_resorte_entry.delete(0, tk.END)
+    masa_entry.delete(0, tk.END)
+    tiempo_final_entry.delete(0, tk.END)
+    x_t_label.config(text="Función x(t):")
+    v_t_label.config(text="Función v(t):")
+    global canvas
+    if canvas:
+        canvas.get_tk_widget().pack_forget()
+    canvas = None
+
 # Configuración de la ventana principal
 root = tk.Tk()
 root.title("Simulación de Oscilador Armónico Simple")
@@ -153,6 +166,10 @@ tiempo_final_entry.pack()
 # Botón para obtener los valores y resolver la ecuación
 submit_button = tk.Button(root, text="Resolver", command=obtener_valores)
 submit_button.pack()
+
+# Botón para limpiar los campos y el gráfico
+clear_button = tk.Button(root, text="Limpiar", command=limpiar_campos)
+clear_button.pack()
 
 # Etiquetas para mostrar las funciones x(t) y v(t)
 x_t_label = tk.Label(root, text="Función x(t):")
