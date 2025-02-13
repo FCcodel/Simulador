@@ -116,7 +116,7 @@ root = tk.Tk()
 root.title("Simulación de Oscilador Armónico Simple")
 
 # Ajustar el tamaño de la ventana
-root.geometry("550x600")  # Ancho x Alto
+root.geometry("550x700")  # Ancho x Alto
 root.minsize(400, 300)    # Tamaño mínimo
 root.maxsize(800, 800)    # Tamaño máximo
 
