@@ -24,7 +24,8 @@ def calculate():
         return jsonify(result="Ecuación no válida")
 
     # Transformada de Laplace
-    # este metodo de SYMPY recibe una función f(t) de tipo Exponenciales, Polinomios, trigonométricas   // no sirve para funciones discontinuas, por partes, complejas o no elementales
+    # este metodo de SYMPY recibe una función f(t) de tipo Exponenciales, Polinomios, trigonométricas  
+    #  // no sirve para funciones discontinuas, por partes, complejas o no elementales
     #Desarrolla el integral unilateral con t entre [0,∞], con términos de la función escalón μ(t) 
     Fs = laplace_transform_suma(ft)
 
@@ -44,8 +45,11 @@ def laplace_transform_suma(ft):
         return termino, constante
     
     # Transformadas de Laplace por términos suma
-    ft = ft.expand()  # Expresión de sumas  --> por la linealidad de laplace, Manejar cada término individualmente permite procesar cada termino de manera mas simple 
-    ft = ft.powsimp() # Simplifica exponentes  --> potencias de igual base, sumamos exponentes para reducir terminos.
+    # Expresión de sumas  --> por la linealidad de laplace, 
+    # Manejar cada término individualmente permite procesar cada termino de manera mas simple 
+    ft = ft.expand()
+    # Simplifica exponentes  --> potencias de igual base, sumamos exponentes para reducir terminos.
+    ft = ft.powsimp() 
  
     if ft.is_Add:
         term_suma = ft.args

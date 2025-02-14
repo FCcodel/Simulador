@@ -13,7 +13,7 @@ def osciladorArmonico(t, y, k, m):
     dvdt = -k/m * x
     return [dxdt, dvdt]
 
-#La función solve_ivp de la biblioteca scipy.integrate en Python 
+#La función solve_ivp 
 # se utiliza para resolver ecuaciones diferenciales ordinarias (EDO) 
 # Limites: Una tupla (T0,Tf) que define el intervalo de integración desde el tiempo inicial 
 # CondicionesIniciales: Un array que contiene las condiciones iniciales para las variables dependientes.
@@ -82,6 +82,7 @@ def obtener_valores():
     #v(t)= -wA.sen (wt)
     #v(t)=−x(0)ω sin(ωt) + v(0).cos(ωt)
     #v(t) = -{PosicionInicial}*{omega} sin({omega} t) + {VelocidadInicial} cos({omega} t)
+
     x_t_func_parts = []
     if PosicionInicial != 0:
         x_t_func_parts.append(f"{PosicionInicial} cos({omega} t)")
