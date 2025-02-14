@@ -11,8 +11,8 @@ def home():
 @app.route('/calculate')
 def calculate():
     equation = request.args.get('equation')
-    u = Heaviside(t)
-    a = symbols('a', real=True)
+    u = Heaviside(t)   # función escalón unitario predefinida por metodo HEAVISIDE
+    a = symbols('a', real=True) # tipo de variale (real)
 
     if equation == 'eq1':
         ft = u - u.subs(t, t-2)
@@ -24,6 +24,8 @@ def calculate():
         return jsonify(result="Ecuación no válida")
 
     # Transformada de Laplace
+    # este metodo de SYMPY recibe una función f(t) de tipo Exponenciales, Polinomios, trigonométricas   // no sirve para funciones discontinuas, por partes, complejas o no elementales
+    #Desarrolla el integral unilateral con t entre [0,∞], con términos de la función escalón μ(t) 
     Fs = laplace_transform_suma(ft)
 
     return jsonify(result=latex(Fs))
@@ -42,9 +44,9 @@ def laplace_transform_suma(ft):
         return termino, constante
     
     # Transformadas de Laplace por términos suma
-    ft = ft.expand()  # Expresión de sumas
-    ft = ft.powsimp() # Simplifica exponentes
-
+    ft = ft.expand()  # Expresión de sumas  --> por la linealidad de laplace, Manejar cada término individualmente permite procesar cada termino de manera mas simple 
+    ft = ft.powsimp() # Simplifica exponentes  --> potencias de igual base, sumamos exponentes para reducir terminos.
+ 
     if ft.is_Add:
         term_suma = ft.args
     else:
@@ -57,6 +59,9 @@ def laplace_transform_suma(ft):
         Fs += Fsk[0] * constante
     
     # Separa exponenciales constantes
+    #Las constantes multiplicativas no afectan la forma de la función en el dominio del tiempo, 
+    #pero pueden simplificar la integración. 
+    # Separarlas permite aplicar la transformada de Laplace solo a la parte variable de la función.
     Fs = Fs.expand()
     return Fs
 
