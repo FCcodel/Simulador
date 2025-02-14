@@ -37,7 +37,8 @@ class CalculadoraTermodinamica:
 
     def calcularLongitudFinal(self, longitudInicial, tempInicial, tempFinal, material):
         """
-        Longitud final = alfa * LongitudInicial * (TemperaturaFinal - TemperaturaInicial) + longitudInicial
+        Longitud final = 
+        alfa * LongitudInicial * (TemperaturaFinal - TemperaturaInicial) + longitudInicial
         """
         alfa_dict = {
             "Aluminio": 24e-6,
@@ -55,7 +56,8 @@ class CalculadoraTermodinamica:
 
     def calcularVolumenFinal(self, volumenInicial, tempInicial, tempFinal, material):
         """
-        Volumen final = Beta * VolumenInicial * (TemperaturaFinal - TemperaturaInicial) + VolumenInicial
+        Volumen final =
+          Beta * VolumenInicial * (TemperaturaFinal - TemperaturaInicial) + VolumenInicial
         """
         beta_dict = {
             "Alcohol Etílico": 1.12e-4,
@@ -108,10 +110,10 @@ class CalculadoraTermodinamica:
         
         # Calcular el trabajo
         if volumenInicial is not None and volumenFinal is not None:
-            deltaV = volumenFinal / volumenInicial
+            deltaV = float(volumenFinal) / float(volumenInicial)
             Trabajo = n * R * Temperatura * math.log(deltaV)
         elif LongitudInicial is not None and LongitudFinal is not None:
-            deltaL = LongitudFinal / LongitudInicial
+            deltaL = float(LongitudFinal) / float(LongitudInicial)
             Trabajo = n * R * Temperatura * math.log(deltaL)
         else:
             raise ValueError("Debe proporcionar Volumen Inicial y Final o Longitud Inicial y Final.")
@@ -120,7 +122,8 @@ class CalculadoraTermodinamica:
 
     def calcularEnergiaInterna(self, masa, tempInicial, tempFinal, gasIdeal="Helio"):
         """
-        ΔU = (3/2) * n * R * ΔT  --> gases monoatómicos con presión constante y volumen constante 
+        ΔU = (3/2) * n * R * ΔT  --> 
+        gases monoatómicos con presión constante y volumen constante 
         """
         masaMolar_dict = {
             "Hidrógeno": 2,
